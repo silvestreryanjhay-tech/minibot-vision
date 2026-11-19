@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mini-Bot Vision</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='landing.css') }}">
+</head>
+<body>
+<nav><span class="logo"><i></i>Mini-Bot Vision</span><a href="/dashboard">Dashboard</a></nav>
+
+<header class="hero">
+  <div class="copy">
+    <h1>Spot what doesn't belong.</h1>
+    <p>A Raspberry Pi Mini-Bot that watches through its camera, names every object it sees, and sounds the buzzer the moment something foreign shows up.</p>
+    <div class="cta"><a class="go" href="/dashboard">Open dashboard</a><span>Allow camera access when asked</span></div>
+  </div>
+  <div class="scene" aria-hidden="true">
+    <div class="frame">
+      <div class="box ok b1"><span>person 96%</span></div>
+      <div class="box ok b2"><span>chair 88%</span></div>
+      <div class="box bad b3"><span>bottle 91% foreign</span></div>
+      <div class="line"></div>
+    </div>
+  </div>
+</header>
+
+<section class="feats">
+  <article><h3>Live object detection</h3><p>The camera feed is analysed frame by frame. Every object gets a bounding box, a label and a confidence score.</p></article>
+  <article><h3>Buzzer and alerts</h3><p>Anything outside your allowed list triggers the buzzer, a snapshot and a dashboard notice.</p></article>
+  <article><h3>Ask Mini-Bot</h3><p>Say "find bottle" or "what do you see". Mini-Bot looks through its camera and answers out loud.</p></article>
+  <article><h3>Human verification</h3><p>Confirm or reject each alert. The dashboard turns your answers into an accuracy score.</p></article>
+</section>
+
+<section class="steps">
+  <h2>How the Mini-Bot decides</h2>
+  <ol><li>Capture<small>Camera frame</small></li><li>Detect<small>COCO-SSD model</small></li><li>Compare<small>Allowed list</small></li><li class="hot">Alert<small>Buzzer + snapshot</small></li><li>Verify<small>You confirm</small></li></ol>
+</section>
+
+<footer>Raspberry Pi &middot; Python &middot; Flask &middot; OpenCV &middot; TensorFlow</footer>
+</body>
+</html>

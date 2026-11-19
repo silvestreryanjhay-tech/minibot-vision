@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mini-Bot Vision</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="top">
+  <div class="brand"><span class="eye" id="eye"></span><div><h1>Mini-Bot Vision</h1><p>Object detection with Raspberry Pi camera</p></div></div>
+  <div class="pills"><a class="pill" href="/">Home</a><span class="pill" id="modePill">Mode</span><span class="pill" id="fpsPill">0 fps</span><span class="pill" id="botPill">Bot idle</span></div>
+</header>
+
+<div class="alert" id="alert" hidden><strong>Foreign object detected</strong><span id="alertText"></span></div>
+
+<main class="grid">
+  <section class="cam panel">
+    <div class="camwrap"><video id="video" autoplay muted playsinline></video><canvas id="overlay"></canvas><div class="scan"></div>
+      <div class="camoverlay" id="camOverlay"><p id="camMsg">Camera is off.</p><button id="camBtn" class="btn primary">Start camera</button></div></div>
+    <div class="camtools">
+      <button id="armBtn" class="btn primary">Pause detection</button>
+      <button id="buzzBtn" class="btn">Mute buzzer</button>
+      <button id="testBuzz" class="btn">Test buzzer</button>
+      <label class="slider">Confidence <input id="conf" type="range" min="10" max="95" value="35"><b id="confVal">35%</b></label>
+    </div>
+  </section>
+
+  <section class="panel drive bot">
+    <h2>Mini-Bot</h2>
+    <div class="botrow"><div class="botface" id="botFace"></div>
+      <div class="bubble"><p id="voiceOut">Hi, I'm Mini-Bot. Tap the mic and ask me to find something.</p><small id="heard"></small></div></div>
+    <button id="micBtn" class="btn mic">Start voice control</button>
+    <div class="say"><input id="sayInput" placeholder='Type a command, e.g. "find bottle"' aria-label="Command"><button id="sayBtn" class="btn">Send</button></div>
+    <div class="targetbar" id="targetBar" hidden>Looking for <b id="targetName"></b><button id="clearTarget" class="chip">Stop</button></div>
+    <div class="chips examples">
+      <button class="chip" data-say="what do you see">what do you see</button>
+      <button class="chip" data-say="find bottle">find bottle</button>
+      <button class="chip" data-say="is there a phone">is there a phone</button>
+      <button class="chip" data-say="how many people">how many people</button>
+      <button class="chip" data-say="any foreign objects">any foreign objects</button>
+    </div>
+    <h3>Drive</h3>
+    <div class="dpad">
+      <button data-cmd="forward" class="up">Forward</button>
+      <button data-cmd="left" class="lf">Left</button>
+      <button data-cmd="stop" class="st">Stop</button>
+      <button data-cmd="right" class="rt">Right</button>
+      <button data-cmd="backward" class="dn">Back</button>
+    </div>
+  </section>
+
+  <section class="panel table">
+    <h2>Detections</h2>
+    <table><thead><tr><th>Object</th><th>Confidence</th><th>Box (x, y, w, h)</th><th>Status</th></tr></thead><tbody id="detBody"></tbody></table>
+  </section>
+
+  <section class="panel counts">
+    <h2>Objects in view</h2>
+    <div class="total"><b id="total">0</b><span>detected now</span></div>
+    <div id="countList" class="countlist"></div>
+    <h3>Allowed objects</h3>
+    <p class="hint">Anything not on this list is treated as foreign. Click to toggle.</p>
+    <div id="allowedChips" class="chips"></div>
+  </section>
+
+  <section class="panel verify">
+    <div class="vhead"><h2>Verification</h2><div class="acc"><b id="acc">--</b><span>accuracy</span></div></div>
+    <p class="hint">Check each foreign-object alert so the Mini-Bot's accuracy can be measured.</p>
+    <div id="events" class="events"></div>
+    <button id="clearBtn" class="btn small">Clear events</button>
+  </section>
+
+  <section class="panel log">
+    <h2>Activity</h2>
+    <ul id="log"></ul>
+  </section>
+
+  <section class="panel algo">
+    <h2>AI algorithm</h2>
+    <ol class="flow">
+      <li>Capture frame<small>Pi camera, 640x480</small></li>
+      <li>Pre-process<small>Resize 300x300, normalize</small></li>
+      <li>MobileNet-SSD<small>Class, box, score</small></li>
+      <li>Filter<small>Score above threshold</small></li>
+      <li>Foreign check<small>Label in allowed list?</small></li>
+      <li class="hot">Alert<small>Buzzer, snapshot, dashboard</small></li>
+      <li>Verify<small>Human confirms or rejects</small></li>
+    </ol>
+  </section>
+</main>
+<button id="fabMic" class="fab" aria-label="Talk to Mini-Bot">&#127908; Talk to Mini-Bot</button>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.17.0/dist/tf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.3/dist/coco-ssd.min.js"></script>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
